@@ -6,9 +6,13 @@ window.title ="calculator"
 window.geometry=(300*500)
 
 display = Entry(window, width=20, borderwidth=5, justif="right", font=("Arial", 28),bg="#2d2d2d",fg="white")
+
 result_label = Label(window, text="",font=("Arial", 18), bg="#1e1e1e",fg="white",anchor="e")
+
 display.grid(row=0,column=0,columnspan=4,padx=7, pady=20)
+
 result_label.grid(row=1,column=0, columnspan=4,sticky="we",padx=5,pady=5)
+
 operator_clicked= False
 
 
@@ -26,21 +30,28 @@ def clear():
     display.delete(0,END)    
 
 def add():
-     display.insert(END,"+")    
+     current=display.get()
+     if current [-1] not in "+ - * / .":
+      display.insert(END,"+")    
 
 def substract():
-     display.insert(END,"-")
-
+     current=display.get()
+     if current[-1] not in "+ - * / .":
+      display.insert(END,"-")
+         
 def multiply():
-    display.insert(END,"*")  
+    current=display.get()
+    if current[-1] not in "+ - * / .": 
+     display.insert(END,"*")  
 
 def divide():
-    display.insert(END,"/")   
+    current=display.get()
+    if current[-1] not in "+ - * / .":
+     display.insert(END,"/")   
 
 def decimal():
   current = display.get()
-
-  if "." not in current:
+  if current[-1] not in "+ - * / .":
     display.insert(END, ".")
 
 
@@ -54,10 +65,21 @@ def total():
     except:
      result_label.config(text="Error")
 
+def brackets():
+   current=display.get()
+
+   open_count=current.count("(")
+   close_count=current.count(")")
+
+   if open_count==close_count:
+       display.insert (END,"(") 
+   else:
+       display.insert (END,")")        
+
 def Keypress (event):
    key=event.keysym
 
-   if key in ["0","1","2","3","4","5","6","7","8","9","."]:
+   if key in ["0","1","2","3","4","5","6","7","8","9",".","(",")"]:
       click(key)
 
    elif key=="plus":
@@ -76,6 +98,10 @@ def Keypress (event):
       clear()   
    elif key =="period":
       decimal()
+   elif key =="paraleft":
+      brackets()
+   elif key == "pararight":
+      brackets()     
 
 window.bind("<Key>",Keypress)               
 
@@ -285,7 +311,8 @@ button_brackets= Button (
     borderwidth=0,
     relief="raised",
     activebackground="#333333",
-    activeforeground="green"
+    activeforeground="green",
+    command=brackets
 )
 
 button_total = Button(
